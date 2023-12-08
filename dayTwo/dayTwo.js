@@ -19,26 +19,49 @@ const rules = {
 };
 
 const partOne = (input) => {
+	let possibleRoundIds = [];
 	let possibleRoundsSum = 0;
 
 	const cleanedGameRounds = input.map((line) =>
 		line
 			.split(':')
 			.pop()
-			.replaceAll(',', ';')
 			.split(';')
-			.map((item) => {
-				const splitItem = item.trim().split(' ');
-				return { number: Number(splitItem[0]), color: splitItem[1] };
+			.map((set) => {
+				return set
+					.trim()
+					.split(',')
+					.map((color) => {
+						return {
+							color: color.trim().split(' ')[1],
+							amount: color.trim().split(' ')[0],
+						};
+					});
 			})
 	);
 
-	let possibleRounds = cleanedGameRounds.filter((round) => round.);
+	cleanedGameRounds.forEach((round, index) => {
+		let condition = true;
 
-	console.log(possibleRounds);
+		if (condition) {
+			round.forEach((set) => {
+				set.forEach((color) => {
+					if (color.amount > rules[color.color]) condition = false;
+				});
+			});
+		}
+
+		if (condition) {
+			possibleRoundIds.push(index + 1);
+		}
+	});
+
+	possibleRoundsSum = possibleRoundIds.reduce((acc, curr) => acc + curr);
+
+	return possibleRoundsSum;
 };
 
-partOne(exampleOne);
+console.log(partOne(input));
 
 // const partTwo = (input) => {};
 
