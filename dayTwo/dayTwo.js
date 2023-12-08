@@ -57,16 +57,52 @@ const partOne = (input) => {
 	});
 
 	possibleRoundsSum = possibleRoundIds.reduce((acc, curr) => acc + curr);
-
 	return possibleRoundsSum;
 };
 
-console.log(partOne(input));
+const partTwo = (input) => {
+	const cleanedGameRounds = input.map((line) =>
+		line
+			.split(':')
+			.pop()
+			.split(';')
+			.map((set) => {
+				return set
+					.trim()
+					.split(',')
+					.map((color) => {
+						return {
+							color: color.trim().split(' ')[1],
+							amount: color.trim().split(' ')[0],
+						};
+					});
+			})
+	);
 
-// const partTwo = (input) => {};
+	const fewestPossible = cleanedGameRounds.map((round) => {
+		let fewest = {
+			red: 0,
+			green: 0,
+			blue: 0,
+		};
+		let fewestMultiplied = 1;
 
-// console.log(`Part One: ${partOne(input)}, Part Two: ${partTwo(input)}`);
+		round.forEach((set) => {
+			set.forEach((color) => {
+				if (color.amount > fewest[color.color]) {
+					fewest[color.color] = Number(color.amount);
+				}
+			});
+		});
 
-// if (draw.number <= rules[draw.color]) {
+		for (let key in fewest) {
+			fewestMultiplied *= fewest[key];
+		}
 
-// }
+		return fewestMultiplied;
+	});
+
+	return fewestPossible.reduce((acc, curr) => acc + curr);
+};
+
+console.log(`Part One: ${partOne(input)}, Part Two: ${partTwo(input)}`);
